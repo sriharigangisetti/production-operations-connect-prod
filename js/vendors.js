@@ -730,19 +730,18 @@
                 const statusBadge = status
                     ? `<span class="vendor-status-badge vendor-status-badge-status">${escapeHtml(status)}</span>`
                     : "";
-                const cardBadges = statusBadge || availability
-                    ? `<div class="vendor-card-badges" aria-label="Support details">${statusBadge}${availability}</div>`
-                    : "";
                 card.innerHTML = `
                     <header class="vendor-card-heading">
-                        <div class="vendor-card-title-row">
+                        <div class="vendor-card-heading-top">
                             <h3 class="vendor-company-name" title="${escapeHtml(company)}">
                                 ${escapeHtml(company)}
                             </h3>
-                            ${cardBadges}
+                            <div class="vendor-card-badges" aria-label="Support details">
+                                ${availability}${statusBadge}
+                            </div>
                         </div>
-                        <div class="vendor-system-count">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1"/><rect x="4" y="14" width="16" height="6" rx="1"/></svg>
+                        <div class="vendor-system-count" aria-label="${systemCount} supported ${systemCount === 1 ? "system" : "systems"}">
+                            <span class="vendor-system-count-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="7" height="6.5" rx="1"/><rect x="13.5" y="4" width="7" height="6.5" rx="1"/><rect x="3.5" y="13.5" width="7" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="7" height="6.5" rx="1"/></svg></span>
                             <strong>${systemCount}</strong>
                             <span>${systemCount === 1 ? "supported system" : "supported systems"}</span>
                         </div>
@@ -757,8 +756,8 @@
                     </section>
 
                     <div class="vendor-card-contacts">
-                        ${phone ? `<div class="vendor-contact-line"><span aria-hidden="true">☎</span><span title="${escapeHtml(vendor.phone)}">${escapeHtml(phone)}</span></div>` : ""}
-                        ${email ? `<div class="vendor-contact-line"><span aria-hidden="true">✉</span><span title="${escapeHtml(vendor.email)}">${escapeHtml(email)}</span></div>` : ""}
+                        ${phone ? `<div class="vendor-contact-line"><span class="vendor-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 16.4v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 1.1 3.7 2 2 0 0 1 3.1 1.5h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L7 9.2a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 2 2.3Z"/></svg></span><span title="${escapeHtml(vendor.phone)}">${escapeHtml(phone)}</span></div>` : ""}
+                        ${email ? `<div class="vendor-contact-line"><span class="vendor-contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></svg></span><span title="${escapeHtml(vendor.email)}">${escapeHtml(email)}</span></div>` : ""}
                     </div>
 
                     <footer class="vendor-card-footer">
