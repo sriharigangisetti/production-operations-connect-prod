@@ -270,6 +270,64 @@
     }
 
 
+    function usableCardValue(value) {
+        const text = String(value || "").trim();
+        return text && !/^(?:n\/?a|tbd|none)$/i.test(text)
+            ? text
+            : "";
+    }
+
+
+    function cardContactSummary(value) {
+        return String(value || "")
+            .split(/\r?\n/)
+            .map(line => line.trim())
+            .filter(usableCardValue)
+            .join(" · ");
+    }
+
+
+    function companyName(vendor) {
+        return usableCardValue(vendor.company) ||
+            usableCardValue(vendor.vendor) ||
+            usableCardValue(vendor.displayName) ||
+            "Vendor";
+    }
+
+
+    function supportedSystemCount(vendor) {
+        const company = companyName(vendor).toLocaleLowerCase();
+        const systems = new Set();
+
+        vendors.forEach(record => {
+            if (companyName(record).toLocaleLowerCase() !== company) {
+                return;
+            }
+
+            const system = usableCardValue(
+                record.systemName || record.displayName
+            );
+
+            if (system) {
+                systems.add(system.toLocaleLowerCase());
+            }
+        });
+
+        return Math.max(systems.size, 1);
+    }
+
+
+    function has24x7Support(vendor) {
+        return [
+            vendor.phone,
+            vendor.email,
+            vendor.vendorPoc,
+            vendor.aagItsPoc,
+            vendor.escalation
+        ].some(value => /24\s*(?:x|\/)\s*7/i.test(String(value || "")));
+    }
+
+
     /* ========================================================
        FILTER OPTIONS
        ======================================================== */
@@ -637,7 +695,7 @@
 
 
         filtered.forEach(
-            (vendor, filteredIndex) => {
+            vendor => {
 
                 const originalIndex =
                     vendors.indexOf(vendor);
@@ -653,102 +711,62 @@
                     "vendor-card";
 
 
-                const colorClass =
-                    "color-" +
-                    (filteredIndex % 6);
-
-
+                const company = companyName(vendor);
+                const systemCount = supportedSystemCount(vendor);
+                const systemName = usableCardValue(
+                    vendor.systemName || vendor.displayName
+                );
+                const systemSubtitle = usableCardValue(vendor.displaySubtitle);
+                const primaryContact = cardContactSummary(
+                    usableCardValue(vendor.vendorPoc) ||
+                    usableCardValue(vendor.aagItsPoc)
+                );
+                const phone = cardContactSummary(vendor.phone);
+                const email = cardContactSummary(vendor.email);
+                const availability = has24x7Support(vendor)
+                    ? '<span class="vendor-status-badge vendor-status-badge-availability">24x7</span>'
+                    : "";
+                const status = usableCardValue(vendor.status);
+                const statusBadge = status
+                    ? `<span class="vendor-status-badge vendor-status-badge-status">${escapeHtml(status)}</span>`
+                    : "";
+                const cardBadges = statusBadge || availability
+                    ? `<div class="vendor-card-badges" aria-label="Support details">${statusBadge}${availability}</div>`
+                    : "";
                 card.innerHTML = `
-
-                    <div class="vendor-card-top">
-
-                        <div class="vendor-avatar ${colorClass}">
-                            ${vendorIcon(vendor)}
-                        </div>
-
-                        <div class="vendor-card-heading">
-
-                            <h3>
-                                ${escapeHtml(
-                                    vendor.displayName
-                                )}
+                    <header class="vendor-card-heading">
+                        <div class="vendor-card-title-row">
+                            <h3 class="vendor-company-name" title="${escapeHtml(company)}">
+                                ${escapeHtml(company)}
                             </h3>
-
-                            <p>
-                                ${escapeHtml(
-                                    vendor.displaySubtitle
-                                )}
-                            </p>
-
+                            ${cardBadges}
                         </div>
+                        <div class="vendor-system-count">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1"/><rect x="4" y="14" width="16" height="6" rx="1"/></svg>
+                            <strong>${systemCount}</strong>
+                            <span>${systemCount === 1 ? "supported system" : "supported systems"}</span>
+                        </div>
+                        <p class="vendor-system-summary">
+                            ${escapeHtml(systemName)}${systemSubtitle && systemSubtitle !== systemName ? ` · ${escapeHtml(systemSubtitle)}` : ""}
+                        </p>
+                    </header>
 
+                    <section class="vendor-primary-contact" aria-label="Primary contact">
+                        <span class="vendor-card-label">Primary contact</span>
+                        <p>${primaryContact ? escapeHtml(primaryContact) : '<span class="vendor-contact-missing">No primary contact listed</span>'}</p>
+                    </section>
+
+                    <div class="vendor-card-contacts">
+                        ${phone ? `<div class="vendor-contact-line"><span aria-hidden="true">☎</span><span title="${escapeHtml(vendor.phone)}">${escapeHtml(phone)}</span></div>` : ""}
+                        ${email ? `<div class="vendor-contact-line"><span aria-hidden="true">✉</span><span title="${escapeHtml(vendor.email)}">${escapeHtml(email)}</span></div>` : ""}
                     </div>
 
-
-                    <div class="vendor-company">
-
-                        <span>
-                            Vendor Company
-                        </span>
-
-                        <strong
-                            title="${escapeHtml(
-                                vendor.company || vendor.vendor
-                            )}"
-                        >
-                            ${escapeHtml(
-                                vendor.company || vendor.vendor ||
-                                ""
-                            )}
-                        </strong>
-
-                    </div>
-
-                    <div class="vendor-card-contact">
-
-                        <span title="${escapeHtml(
-                            vendor.phone || "Not provided"
-                        )}">
-                            ☎ ${escapeHtml(
-                                vendor.phone || "Not provided"
-                            )}
-                        </span>
-
-                        <span title="${escapeHtml(
-                            vendor.email || "Not provided"
-                        )}">
-                            ✉ ${escapeHtml(
-                                vendor.email || "Not provided"
-                            )}
-                        </span>
-
-                    </div>
-
-
-                    <div class="vendor-card-footer">
-
-                        <span
-                            class="vendor-team"
-                            title="${escapeHtml(
-                                vendor.aagItsTeam
-                            )}"
-                        >
-                            ${escapeHtml(
-                                vendor.aagItsTeam ||
-                                ""
-                            )}
-                        </span>
-
-                        <button
-                            class="vendor-view"
-                            type="button"
-                            data-index="${originalIndex}"
-                        >
-                            View Details →
+                    <footer class="vendor-card-footer">
+                        <span class="vendor-team" title="${escapeHtml(vendor.aagItsTeam || "")}">${escapeHtml(vendor.aagItsTeam || "")}</span>
+                        <button class="vendor-view" type="button" data-index="${originalIndex}">
+                            View Details <span aria-hidden="true">→</span>
                         </button>
-
-                    </div>
-
+                    </footer>
                 `;
 
 

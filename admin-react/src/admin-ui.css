@@ -116,11 +116,6 @@ button { cursor: pointer; }
 .header-copy h1 { margin: 7px 0 6px; color: white; font-size: clamp(30px, 3.1vw, 47px); font-weight: 750; letter-spacing: -.9px; }
 .header-copy p { margin: 0; color: #8fb5d0; font-size: 13px; }
 .header-actions { display: flex; align-items: center; gap: 9px; }
-.profile { display: flex; align-items: center; gap: 9px; min-width: 192px; padding: 8px 12px 8px 8px; border: 1px solid rgba(101, 198, 245, .27); background: rgba(9, 54, 94, .62); }
-.profile > span { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(116, 220, 255, .6); border-radius: 50%; color: white; background: #087bd0; font-size: 11px; font-weight: 800; }
-.profile strong, .profile small { display: block; }
-.profile strong { color: white; font-size: 11px; }
-.profile small { margin-top: 3px; color: #81b9d8; font-size: 9px; }
 .header-button { padding: 10px 14px; border: 1px solid rgba(115, 205, 250, .28); border-radius: 7px; color: #d9f2ff; background: rgba(11, 71, 117, .74); font-size: 11px; font-weight: 750; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
 .header-button:hover { border-color: rgba(119, 220, 255, .6); background: #0a79c8; transform: translateY(-1px); }
 .header-button.logout { color: #8ab6d3; background: transparent; }
@@ -229,7 +224,6 @@ button { cursor: pointer; }
     .dashboard { height: auto; overflow: visible; }
     .command-header { align-items: flex-start; flex-direction: column; }
     .header-actions { width: 100%; flex-wrap: wrap; }
-    .profile { flex: 1; }
     .metrics { grid-template-columns: 1fr; }
     .vendor-console-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -238,7 +232,6 @@ button { cursor: pointer; }
     .dashboard { padding: 17px 14px 26px; }
     .header-copy h1 { font-size: 30px; }
     .header-actions { display: grid; grid-template-columns: 1fr 1fr; }
-    .profile { grid-column: 1 / -1; }
     .command-line { font-size: 8px; }
     .module-grid, .vendor-console-grid { grid-template-columns: 1fr; }
     .vendor-heading { align-items: stretch; flex-wrap: wrap; }

@@ -1673,7 +1673,7 @@ body::after {
     .main-content {
         margin-left: 94px;
 
-        padding-top: 27px;
+        padding-top: 0;
         padding-right: 0;
         padding-bottom: 25px;
         padding-left: 0;

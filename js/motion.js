@@ -14,10 +14,10 @@
         const current = new URL(window.location.href);
         const sameDocument = destination.origin === current.origin && destination.pathname === current.pathname;
 
-        if (sameDocument || destination.protocol !== current.protocol) return;
+        if (destination.origin !== current.origin || sameDocument || destination.protocol !== current.protocol) return;
 
         event.preventDefault();
         document.body.classList.add("page-is-leaving");
-        window.setTimeout(() => { window.location.href = destination.href; }, 180);
+        window.setTimeout(() => { window.location.href = destination.href; }, 240);
     });
-});
+})();

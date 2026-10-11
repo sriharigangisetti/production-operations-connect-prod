@@ -160,8 +160,6 @@ function App() {
   useEffect(() => localStorage.setItem(STORAGE.applications, JSON.stringify(applications)), [applications]);
 
   const results = useMemo(() => vendors.filter(v => Object.values(v).join(" ").toLowerCase().includes(query.toLowerCase())), [vendors, query]);
-  const profileName = (email || "Administrator").split("@")[0].split(".").map(part => part ? `${part[0].toUpperCase()}${part.slice(1)}` : "").filter(Boolean).join(" ");
-  const profileInitials = profileName.split(" ").map(part => part[0]).join("").slice(0, 2).toUpperCase() || "AD";
   const currentPath = window.location.pathname.replace(/\\/g, "/").replace(/\/$/, "").toLowerCase();
   const isActiveNavigation = href => new URL(href, window.location.href).pathname.replace(/\\/g, "/").replace(/\/$/, "").toLowerCase() === currentPath;
 
@@ -193,7 +191,7 @@ function App() {
     <section className="dashboard">
       <header className="command-header">
         <div className="header-copy"><small>ITS PRODUCTION OPERATIONS</small><h1>Admin Control Center</h1><p>Manage applications, vendors and operational information.</p></div>
-        <div className="header-actions"><div className="profile"><span>{profileInitials}</span><div><strong>Welcome, {profileName}</strong><small>Production Operations</small></div></div><button className="header-button" onClick={() => setChangingPassword(true)}>Change Password</button><button className="header-button logout" onClick={() => { localStorage.removeItem(STORAGE.authenticated); localStorage.removeItem(STORAGE.email); setEmail(null); }}>Logout</button></div>
+        <div className="header-actions"><button className="header-button" onClick={() => setChangingPassword(true)}>Change Password</button><button className="header-button logout" onClick={() => { localStorage.removeItem(STORAGE.authenticated); localStorage.removeItem(STORAGE.email); setEmail(null); }}>Logout</button></div>
       </header>
       <div className="command-line"><span><i className="online-dot"></i> SYSTEM STATUS: OPERATIONAL</span><span>LAST SYNC · LIVE</span></div>
       <section className="metrics"><Metric value={applications.length} label="APPLICATIONS" detail="Active operational applications" icon="✈" tone="blue" /><Metric value={vendors.length} label="VENDOR RECORDS" detail="Configured vendor contacts" icon="♟" tone="green" /><Metric value={history.length} label="CHANGES" detail="Changes pending review" icon="↻" tone="purple" /></section>

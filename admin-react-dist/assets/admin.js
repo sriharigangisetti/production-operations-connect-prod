@@ -24057,7 +24057,7 @@
     ["Home", "../home.html", "\u2302"],
     ["Vendors", "../vendors.html", "\u25A6"],
     ["Categories", "../categories.html", "\u25A6"],
-    ["Ground Stop Apps","../home.html#applications","\u2708"],
+    ["Ground Stop Apps", "../home.html#applications", "\u2708"],
     ["Favorites", "../favorites.html", "\u2606"],
     ["Reports", "../reports.html", "\u25A4"],
     ["Admin", "./index.html", "\u25C8"]
@@ -24115,8 +24115,6 @@
     }))), [vendors]);
     (0, import_react3.useEffect)(() => localStorage.setItem(STORAGE.applications, JSON.stringify(applications)), [applications]);
     const results = (0, import_react3.useMemo)(() => vendors.filter((v) => Object.values(v).join(" ").toLowerCase().includes(query.toLowerCase())), [vendors, query]);
-    const profileName = (email || "Administrator").split("@")[0].split(".").map((part) => part ? `${part[0].toUpperCase()}${part.slice(1)}` : "").filter(Boolean).join(" ");
-    const profileInitials = profileName.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "AD";
     const currentPath = window.location.pathname.replace(/\\/g, "/").replace(/\/$/, "").toLowerCase();
     const isActiveNavigation = (href) => new URL(href, window.location.href).pathname.replace(/\\/g, "/").replace(/\/$/, "").toLowerCase() === currentPath;
     function saveVendor(draft) {
@@ -24169,16 +24167,6 @@
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "Manage applications, vendors and operational information." })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "header-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "profile", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: profileInitials }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { children: [
-                  "Welcome, ",
-                  profileName
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("small", { children: "Production Operations" })
-              ] })
-            ] }),
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "header-button", onClick: () => setChangingPassword(true), children: "Change Password" }),
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "header-button logout", onClick: () => {
               localStorage.removeItem(STORAGE.authenticated);
@@ -24319,6 +24307,27 @@
     ] });
   }
   var App_default = App;
+
+  // ../js/motion.js
+  (() => {
+    if (window.productionOperationsMotionReady) return;
+    window.productionOperationsMotionReady = true;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a[href]");
+      if (!link || reducedMotion.matches || event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target || link.hasAttribute("download")) return;
+      const destination = new URL(link.href, window.location.href);
+      const current = new URL(window.location.href);
+      const sameDocument = destination.origin === current.origin && destination.pathname === current.pathname;
+      if (destination.origin !== current.origin || sameDocument || destination.protocol !== current.protocol) return;
+      event.preventDefault();
+      document.body.classList.add("page-is-leaving");
+      window.setTimeout(() => {
+        window.location.href = destination.href;
+      }, 240);
+    });
+  })();
 
   // src/main.jsx
   var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);

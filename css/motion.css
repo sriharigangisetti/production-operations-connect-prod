@@ -1,13 +1,20 @@
 /* Shared, restrained motion for the Production Operations static pages. */
 html { scroll-behavior: smooth; }
 
-body {
-    animation: production-page-enter .34s ease-out both;
+body:not(.page-is-leaving) .main-content,
+body:not(.page-is-leaving) .categories-main,
+body:not(.page-is-leaving) .welcome-content {
+    animation: production-page-enter .3s ease-out both;
 }
 
 body.page-is-leaving {
-    animation: production-page-leave .18s ease-in both;
     pointer-events: none;
+}
+
+body.page-is-leaving .main-content,
+body.page-is-leaving .categories-main,
+body.page-is-leaving .welcome-content {
+    animation: production-page-leave .24s ease-in both;
 }
 
 a,
@@ -35,8 +42,10 @@ a:active {
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    body,
-    body.page-is-leaving { animation: none; }
+    body.page-is-leaving { pointer-events: auto; }
+    .main-content,
+    .categories-main,
+    .welcome-content { animation: none !important; }
     a,
     button,
     input,
